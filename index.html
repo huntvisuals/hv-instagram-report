@@ -3,15 +3,136 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Hunt Visuals — Instagram Monthly Report</title>
+<title>Instagram Monthly Report</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<!-- ============================================================= -->
+<!--  HUNT VISUALS · CLIENT INSTAGRAM REPORT TEMPLATE              -->
+<!--  To make a new client report: edit ONLY the REPORT object     -->
+<!--  below, save as a new file, done. Charts redraw themselves.   -->
+<!--  Full how-to in the README in this folder.                    -->
+<!-- ============================================================= -->
+<script>
+const REPORT = {
+
+  // ---- BRANDING -------------------------------------------------
+  agency:   { name: "Hunt Visuals", site: "huntvisuals.com" },
+  accent:   "#19e3ff",          // client brand colour (hex). Drives the whole theme.
+  accent2:  "#7b5cff",          // secondary colour for charts
+
+  // ---- CLIENT + PERIOD -----------------------------------------
+  client:   { name: "Hunt Visuals", handle: "@huntvisuals__", logo: "" }, // logo: optional image URL; blank = initials badge
+  period:   "11 May to 9 Jun 2026",
+  followers:"4,591",
+  compiled: "10 Jun 2026",
+
+  // ---- ONE-LINE READ -------------------------------------------
+  summary: "Reels are carrying the whole account and education plus behind-the-scenes formats are clearly what works. The hook style (white text, one bold keyword) is the highest-performing visual pattern. The flip side: organic reach and profile visits both dropped this month, more than half the views are paid, and nearly three of every four new follows are being lost. Fix the churn and lean harder into reels and this climbs fast.",
+
+  // ---- HEADLINE KPIS -------------------------------------------
+  // dir: "up" | "down" | "flat".  Set good:true if up is good for this metric.
+  kpis: [
+    { label:"Followers",         value:"4,591",   delta:"+1.1%",  dir:"up",   good:true,  note:"178 new, 129 unfollows" },
+    { label:"Views",             value:"135,787", delta:"55.9% from ads", dir:"flat", note:"Organic views about 59,900" },
+    { label:"Accounts reached",  value:"29,437",  delta:"-53.2%", dir:"down", good:false, note:"Biggest drop this month" },
+    { label:"Interactions",      value:"1,149",   delta:"11.7% from ads", dir:"flat", note:"Likes 416 · Saves 56 · Shares 48 · Comments 23" },
+    { label:"Engagement rate",   value:"3.9%",    delta:"by reach", dir:"up", good:true, note:"Healthy. 1-3% is typical on IG" },
+    { label:"Profile visits",    value:"2,586",   delta:"-40.7%", dir:"down", good:false, note:"Total profile activity 2,640" },
+    { label:"External link taps",value:"54",      delta:"+20%",   dir:"up",   good:true,  note:"Only traffic signal trending up" },
+    { label:"Net new followers", value:"+49",     delta:"after churn", dir:"up", good:true, note:"From 178 follows minus 129 unfollows" },
+  ],
+
+  // ---- TOP CONTENT (ranked by views) ---------------------------
+  // img:  optional cover image URL (else a branded gradient shows)
+  // link: optional Instagram post URL (makes the card clickable)
+  topContent: [
+    { rank:1, type:"Reel",     normal:"Why we use",            keyword:"A DRONE",            date:"29 May · best all-rounder",     stats:[["2,343","views"],["48","likes"],["3","follows"]], img:"", link:"" },
+    { rank:2, type:"Reel",     normal:"VE Plaster shooting day",keyword:"BEHIND THE SCENES", date:"1 Jun · most liked",            stats:[["2,124","views"],["56","likes"]], img:"", link:"" },
+    { rank:3, type:"Carousel", normal:"We are",                keyword:"NOT VIDEOGRAPHERS",  date:"11 May · top non-reel",         stats:[["1,957","views"]], img:"", link:"" },
+    { rank:4, type:"Reel",     normal:"Script help:",          keyword:"CAMERA POV",         date:"20 May",                        stats:[["1,823","views"],["54","likes"]], img:"", link:"" },
+    { rank:5, type:"Reel",     normal:"Why you look awkward",  keyword:"ON CAMERA",          date:"May",                           stats:[["1,760","views"]], img:"", link:"" },
+    { rank:6, type:"Carousel", normal:"Could you",             keyword:"4X YOUR PRICES",     date:"May",                           stats:[["1,483","views"]], img:"", link:"" },
+    { rank:7, type:"Reel",     normal:"Full",                  keyword:"AD SCRIPT STRUCTURE",date:"5 Jun",                         stats:[["1,478","views"],["1","follow"]], img:"", link:"" },
+    { rank:8, type:"Reel",     normal:"What one",              keyword:"CONTENT DAY",        date:"27 May · top follow driver",    stats:[["1,397","views"],["3","follows"]], img:"", link:"" },
+    { rank:9, type:"Reel",     normal:"360",                   keyword:"HAIR CLINIC",        date:"May",                           stats:[["1,250","views"]], img:"", link:"" },
+  ],
+
+  // ---- WHAT'S WORKING / NEEDS ATTENTION ------------------------
+  working: [
+    "<b>Reels are the engine.</b> 57.3% of all interactions and the entire top-content list. Put the effort here.",
+    "<b>The hook style wins.</b> White text plus one bold keyword. The four best reels all use it.",
+    "<b>Reaching new people.</b> 66% of views and 18.6% of interactions came from non-followers.",
+    "<b>Shares beat comments.</b> 48 shares vs 23 comments. Genuinely send-to-a-mate worthy.",
+    "<b>Right people, right place.</b> Reach concentrated in Brighton, Worthing and Sussex, the core ICP geography.",
+    "<b>Link taps up 20%.</b> Small number but the only traffic signal moving the right way.",
+  ],
+  attention: [
+    "<b>Reach down 53%, profile visits down 41%.</b> The two biggest month-on-month drops.",
+    "<b>Ads are propping up the numbers.</b> 55.9% of views are paid. Organic reach is the soft spot.",
+    "<b>High follower churn.</b> 178 follows but 129 unfollows. Less than 1 in 3 new follows stick.",
+    "<b>Static posts barely register.</b> 8.8% of interactions, 9.1% of views.",
+    "<b>Conversation is thin.</b> 23 comments across all reels. Engagement is passive.",
+    "<b>Stories stay in-house.</b> Big share of views but interactions are 81% existing followers.",
+  ],
+
+  // ---- DONUTS (segments auto-draw from pct) --------------------
+  viewsByFormat:        { title:"Views by format",        centerTop:"135.8K", centerSub:"views",   segs:[["Stories",60.4],["Reels",30.5],["Posts",9.1]] },
+  interactionsByFormat: { title:"Interactions by format", centerTop:"1,149",  centerSub:"actions", segs:[["Reels",57.3],["Stories",33.9],["Posts",8.8]] },
+  paidVsOrganic:        { title:"Views: paid vs organic", centerTop:"55.9%",  centerSub:"from ads",segs:[["Paid",55.9],["Organic",44.1]] },
+  gender:               { title:"Gender", centerTop:"71.8%", centerSub:"men", segs:[["Men",71.8],["Women",28.2]] },
+
+  // ---- REACH vs ENGAGEMENT SOURCE ------------------------------
+  sourceBars: [
+    ["Views from non-followers", 66.0, "p"],
+    ["Views from followers", 34.0, ""],
+    ["Interactions from followers", 81.4, "solid"],
+    ["Interactions from non-followers", 18.6, "p"],
+  ],
+  engagementBars: [ ["Likes",416],["Saves",56],["Shares",48],["Comments",23] ],
+
+  // ---- BEST TIME TO POST ---------------------------------------
+  // 8 buckets across the day; mark the peak with peak:true
+  hours: [
+    {l:"12a",h:22},{l:"3a",h:20},{l:"6a",h:55},{l:"9a",h:70},
+    {l:"12p",h:78},{l:"3p",h:88},{l:"6p",h:100,peak:true},{l:"9p",h:62}
+  ],
+  timeRec: "Post in the late-morning to early-afternoon window, roughly <b>11am to 1pm</b>. That gives each reel a few hours to gather early views and shares before the 3pm to 6pm activity peak, which is when the algorithm decides whether to push it wider. Avoid posting after 9pm or overnight.",
+
+  // ---- AUDIENCE ------------------------------------------------
+  age:        [["18-24",12.1],["25-34",45.9],["35-44",29.0],["45-54",10.7],["55+",2.1]],
+  locations:  [["Brighton & Hove",11.9],["Worthing",9.8],["London",5.4],["Littlehampton",3.6],["Chichester",1.5]],
+
+  // ---- GROWTH --------------------------------------------------
+  growth: { follows:"178", unfollows:"129", net:"+49",
+            note:"178 follows earned but 129 lost, so only 49 stuck. That much churn usually means new followers arrive from a strong reel then do not see a clear, consistent reason to stay. A tight content rhythm fixes it." },
+
+  // ---- RECOMMENDATIONS -----------------------------------------
+  recommendations: [
+    { h:"Go reel-heavy with the keyword hook", p:"4 to 5 reels a week in education and behind-the-scenes formats. Keep the white-text plus one-bold-keyword cover. Cut or repurpose static posts into reels." },
+    { h:"Stop the follower leak", p:"Set 3 content pillars so a new follower instantly knows what they will get. Pin the three best reels so the profile sells the account in 5 seconds." },
+    { h:"Turn views into conversation and DMs", p:"End every reel with a question or a comment-trigger call to action. Use a ManyChat trigger on the best performers so reach becomes booked calls, not just likes." },
+    { h:"Post into the 11am to 1pm window", p:"Give each reel runway before the 3 to 6pm activity peak. Build the full seven-day picture next month to sharpen this." },
+    { h:"Rebuild organic reach", p:"More than half the views are paid. Lean into the send-to-a-mate angles that already travel to lift organic shares and cut reliance on ad spend." },
+    { h:"Push the profile and the link harder", p:"54 link taps off 29k reach is low. Tighten the bio call to action and use a link sticker on the best Stories." },
+  ],
+
+  // ---- TARGETS FOR NEXT MONTH (measurable goals) ---------------
+  targets: [
+    { metric:"Net new followers", from:"+49",     to:"+150",  how:"Cut churn with pillars + pinned reels" },
+    { metric:"Organic reach",     from:"29,437",  to:"35,000",how:"4-5 reels/week, lean on shareable angles" },
+    { metric:"Comments",          from:"23",      to:"75",    how:"Question or comment-trigger CTA on every reel" },
+    { metric:"Link taps",         from:"54",      to:"90",    how:"Stronger bio CTA + story link stickers" },
+  ],
+};
+</script>
+
 <style>
   :root{
     --bg:#08080c; --panel:#13131c; --panel2:#191923; --line:#26263340;
     --text:#f5f5f7; --muted:#9696a6; --faint:#63636f;
-    --cyan:#19e3ff; --purple:#7b5cff; --green:#2ec47a; --red:#ff5a6e; --amber:#ffc24b;
+    --accent:#19e3ff; --accent2:#7b5cff; --green:#2ec47a; --red:#ff5a6e; --amber:#ffc24b;
     --radius:18px;
   }
   *{box-sizing:border-box;margin:0;padding:0}
@@ -20,94 +141,101 @@
     background:var(--bg);color:var(--text);
     font-family:'Inter',system-ui,-apple-system,sans-serif;
     line-height:1.55;-webkit-font-smoothing:antialiased;
-    background-image:radial-gradient(900px 500px at 80% -10%, #19e3ff14, transparent),radial-gradient(700px 500px at 0% 0%, #7b5cff12, transparent);
+    background-image:radial-gradient(900px 500px at 80% -10%, color-mix(in srgb, var(--accent) 9%, transparent), transparent),radial-gradient(700px 500px at 0% 0%, color-mix(in srgb, var(--accent2) 8%, transparent), transparent);
   }
   .wrap{max-width:1160px;margin:0 auto;padding:0 22px}
   h1,h2,h3,.display{font-family:'Space Grotesk','Inter',sans-serif;letter-spacing:-.02em;line-height:1.1}
-  a{color:var(--cyan);text-decoration:none}
+  a{color:var(--accent);text-decoration:none}
+
+  /* NAV */
+  nav{position:sticky;top:0;z-index:50;background:#08080cd9;backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+  nav .inner{max-width:1160px;margin:0 auto;padding:13px 22px;display:flex;align-items:center;gap:18px}
+  nav .brand{font-family:'Space Grotesk';font-weight:700;font-size:15px;letter-spacing:-.01em}
+  nav .brand b{color:var(--accent)}
+  nav .links{margin-left:auto;display:flex;gap:20px}
+  nav .links a{color:var(--muted);font-size:13.5px;font-weight:500}
+  nav .links a:hover{color:var(--text)}
+  @media(max-width:760px){ nav .links{display:none} }
 
   /* HERO */
-  header{padding:74px 0 30px}
-  .eyebrow{display:inline-flex;align-items:center;gap:9px;font-size:12.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);margin-bottom:22px}
-  .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 14px var(--cyan)}
-  header h1{font-size:clamp(34px,5.4vw,60px);font-weight:700}
-  header h1 .hl{color:var(--cyan)}
-  .sub{margin-top:16px;color:var(--muted);font-size:17px;max-width:640px}
-  .meta-row{margin-top:26px;display:flex;flex-wrap:wrap;gap:10px}
+  header{padding:54px 0 26px}
+  .prepared{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+  .logo-badge{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-family:'Space Grotesk';font-weight:700;color:#06141a;font-size:17px;flex:none;background-size:cover;background-position:center}
+  .prepared .who{font-size:13px;color:var(--muted)}
+  .prepared .who b{color:var(--text);font-weight:600;display:block;font-size:14.5px}
+  .eyebrow{display:inline-flex;align-items:center;gap:9px;font-size:12.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:18px}
+  .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 14px var(--accent)}
+  header h1{font-size:clamp(34px,5.4vw,58px);font-weight:700}
+  header h1 .hl{color:var(--accent)}
+  .meta-row{margin-top:24px;display:flex;flex-wrap:wrap;gap:10px}
   .chip{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:8px 15px;font-size:13.5px;color:var(--muted)}
   .chip b{color:var(--text);font-weight:600}
 
-  section{padding:30px 0}
+  section{padding:30px 0;scroll-margin-top:64px}
   .sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:20px}
   .sec-head h2{font-size:23px;font-weight:600}
   .sec-head .num{font-family:'Space Grotesk';color:var(--faint);font-size:15px;font-weight:600}
   .lead{color:var(--muted);font-size:15.5px;max-width:760px;margin:-6px 0 22px}
 
-  /* KPI GRID */
-  .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-  .kpi{background:linear-gradient(180deg,var(--panel),#10101a);border:1px solid var(--line);border-radius:var(--radius);padding:22px}
-  .kpi .label{font-size:12.5px;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.06em}
-  .kpi .val{font-family:'Space Grotesk';font-size:36px;font-weight:700;margin-top:10px;line-height:1}
-  .kpi .delta{margin-top:9px;font-size:13px;font-weight:600;display:inline-flex;gap:6px;align-items:center}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .kpi{background:linear-gradient(180deg,var(--panel),#10101a);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+  .kpi .label{font-size:12px;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.06em}
+  .kpi .val{font-family:'Space Grotesk';font-size:31px;font-weight:700;margin-top:9px;line-height:1}
+  .kpi .delta{margin-top:8px;font-size:12.5px;font-weight:600;display:inline-flex;gap:5px;align-items:center}
   .up{color:var(--green)} .down{color:var(--red)} .flat{color:var(--muted)}
-  .kpi .note{margin-top:7px;font-size:12.5px;color:var(--faint)}
+  .kpi .note{margin-top:6px;font-size:12px;color:var(--faint)}
 
-  /* PANELS */
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
   .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
   .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:24px}
   .panel h3{font-size:16px;font-weight:600;margin-bottom:4px}
   .panel .cap{font-size:12.5px;color:var(--faint);margin-bottom:18px}
 
-  /* bars */
   .bar{margin:13px 0}
   .bar .top{display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:7px}
   .bar .top .v{font-weight:600;font-family:'Space Grotesk'}
   .track{height:9px;background:#ffffff0f;border-radius:6px;overflow:hidden}
-  .fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--cyan),var(--purple))}
-  .fill.solid{background:var(--cyan)}
-  .fill.p{background:var(--purple)}
-  .fill.g{background:var(--green)}
+  .fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+  .fill.solid{background:var(--accent)}
+  .fill.p{background:var(--accent2)}
 
-  /* donut */
   .donut-wrap{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
   .donut{width:150px;height:150px;border-radius:50%;flex:none;position:relative;display:grid;place-items:center}
   .donut::after{content:"";position:absolute;inset:18px;background:var(--panel);border-radius:50%}
   .donut .mid{position:relative;z-index:2;text-align:center}
   .donut .mid b{font-family:'Space Grotesk';font-size:22px;display:block}
   .donut .mid span{font-size:11px;color:var(--muted)}
-  .legend{font-size:13.5px;display:flex;flex-direction:column;gap:9px}
+  .legend{font-size:13.5px;display:flex;flex-direction:column;gap:9px;min-width:150px}
   .legend div{display:flex;align-items:center;gap:9px}
   .sw{width:11px;height:11px;border-radius:3px;flex:none}
   .legend .pct{margin-left:auto;font-weight:600;font-family:'Space Grotesk';padding-left:18px}
 
-  /* active times */
   .hours{display:flex;align-items:flex-end;gap:6px;height:130px;margin-top:8px}
   .hours .col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:6px;height:100%}
-  .hours .col .b{width:100%;border-radius:5px 5px 2px 2px;background:linear-gradient(180deg,var(--cyan),#19e3ff55);min-height:6px}
-  .hours .col.peak .b{background:linear-gradient(180deg,#fff,var(--cyan));box-shadow:0 0 18px #19e3ff66}
+  .hours .col .b{width:100%;border-radius:5px 5px 2px 2px;background:linear-gradient(180deg,var(--accent),color-mix(in srgb,var(--accent) 30%,transparent));min-height:6px}
+  .hours .col.peak .b{background:linear-gradient(180deg,#fff,var(--accent));box-shadow:0 0 18px color-mix(in srgb,var(--accent) 40%,transparent)}
   .hours .col small{font-size:10.5px;color:var(--faint)}
 
-  /* CONTENT CARDS */
   .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
   .card{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:1/1.18;border:1px solid var(--line);
-        background:linear-gradient(160deg,#22222e,#0d0d14);display:flex;flex-direction:column;justify-content:flex-end;padding:16px}
-  .card .type{position:absolute;top:12px;right:12px;font-size:10px;font-weight:600;letter-spacing:.05em;background:#000000077;border:1px solid #ffffff22;border-radius:6px;padding:4px 7px;text-transform:uppercase;color:#fff}
-  .card .rank{position:absolute;top:12px;left:12px;width:26px;height:26px;border-radius:8px;background:var(--cyan);color:#04141a;font-weight:700;font-family:'Space Grotesk';font-size:13px;display:grid;place-items:center}
+        background:linear-gradient(160deg,#22222e,#0d0d14);background-size:cover;background-position:center;
+        display:flex;flex-direction:column;justify-content:flex-end;padding:16px;color:#fff;transition:transform .18s ease,border-color .18s ease}
+  a.card:hover{transform:translateY(-3px);border-color:var(--accent)}
+  .card .type{position:absolute;top:12px;right:12px;font-size:10px;font-weight:600;letter-spacing:.05em;background:#000000077;border:1px solid #ffffff22;border-radius:6px;padding:4px 7px;text-transform:uppercase}
+  .card .rank{position:absolute;top:12px;left:12px;width:26px;height:26px;border-radius:8px;background:var(--accent);color:#04141a;font-weight:700;font-family:'Space Grotesk';font-size:13px;display:grid;place-items:center}
   .card::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,#000000cc);z-index:1}
   .card .ttl{position:relative;z-index:2;font-family:'Space Grotesk';font-weight:600;font-size:17px;line-height:1.15;text-shadow:0 2px 12px #000}
-  .card .ttl .k{color:var(--cyan);display:block;font-size:20px}
+  .card .ttl .k{color:var(--accent);display:block;font-size:20px}
   .card .stats{position:relative;z-index:2;display:flex;gap:7px;margin-top:12px;flex-wrap:wrap}
   .card .stats .s{background:#000000088;border:1px solid #ffffff1f;border-radius:8px;padding:5px 9px;font-size:12px;font-weight:600;font-family:'Space Grotesk'}
   .card .stats .s span{color:var(--muted);font-weight:500;font-family:'Inter';margin-left:3px}
-  .card .date{position:relative;z-index:2;font-size:11.5px;color:#b9b9c4;margin-top:9px}
+  .card .date{position:relative;z-index:2;font-size:11.5px;color:#cacad4;margin-top:9px}
 
-  /* insight lists */
   .ins{display:grid;grid-template-columns:1fr 1fr;gap:16px}
   .ins .col{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:24px}
   .ins .col.win{border-top:3px solid var(--green)}
   .ins .col.fix{border-top:3px solid var(--amber)}
-  .ins h3{font-size:17px;margin-bottom:16px;display:flex;align-items:center;gap:9px}
+  .ins h3{font-size:17px;margin-bottom:16px}
   .ins ul{list-style:none;display:flex;flex-direction:column;gap:15px}
   .ins li{font-size:14.5px;padding-left:24px;position:relative;color:#dcdce4}
   .ins li b{color:#fff;font-weight:600}
@@ -115,373 +243,241 @@
   .ins .win li::before{background:var(--green)}
   .ins .fix li::before{background:var(--amber)}
 
-  /* recommendations */
   .recs{display:flex;flex-direction:column;gap:12px}
   .rec{display:flex;gap:16px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;align-items:flex-start}
-  .rec .n{font-family:'Space Grotesk';font-weight:700;font-size:20px;color:var(--cyan);flex:none;width:34px}
+  .rec .n{font-family:'Space Grotesk';font-weight:700;font-size:20px;color:var(--accent);flex:none;width:34px}
   .rec .body h4{font-size:15.5px;font-weight:600;margin-bottom:4px}
   .rec .body p{font-size:14px;color:var(--muted)}
 
-  .callout{background:linear-gradient(120deg,#19e3ff12,#7b5cff12);border:1px solid #19e3ff33;border-radius:var(--radius);padding:24px 26px;margin-top:8px}
+  table.targets{width:100%;border-collapse:collapse;font-size:14px}
+  table.targets th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600;padding:0 14px 12px}
+  table.targets td{padding:14px;border-top:1px solid var(--line);vertical-align:middle}
+  table.targets tr td:first-child{font-weight:600}
+  .goal{font-family:'Space Grotesk';font-weight:700}
+  .goal .arrow{color:var(--faint);margin:0 7px}
+  .goal .to{color:var(--green)}
+  table.targets .how{color:var(--muted);font-size:13px}
+
+  .callout{background:linear-gradient(120deg,color-mix(in srgb,var(--accent) 9%,transparent),color-mix(in srgb,var(--accent2) 9%,transparent));border:1px solid color-mix(in srgb,var(--accent) 22%,transparent);border-radius:var(--radius);padding:24px 26px}
   .callout h3{font-size:17px;margin-bottom:8px}
-  .callout p{font-size:14.5px;color:#cfcfda;max-width:780px}
+  .callout p{font-size:14.5px;color:#cfcfda;max-width:820px}
 
-  footer{padding:50px 0 70px;color:var(--faint);font-size:13px;border-top:1px solid var(--line);margin-top:40px}
+  footer{padding:46px 0 70px;color:var(--faint);font-size:13px;border-top:1px solid var(--line);margin-top:40px}
   footer b{color:var(--muted)}
+  footer .fbrand{font-family:'Space Grotesk';font-weight:700;color:var(--text);font-size:15px;margin-bottom:8px}
+  footer .fbrand b{color:var(--accent)}
 
-  @media(max-width:820px){
-    .kpis,.grid2,.grid3,.cards,.ins{grid-template-columns:1fr}
-    .cards{grid-template-columns:1fr 1fr}
-  }
-  @media(max-width:520px){ .cards{grid-template-columns:1fr} }
+  @media(max-width:900px){ .kpis{grid-template-columns:repeat(2,1fr)} }
+  @media(max-width:820px){ .grid2,.grid3,.cards,.ins{grid-template-columns:1fr} .cards{grid-template-columns:1fr 1fr} }
+  @media(max-width:520px){ .cards,.kpis{grid-template-columns:1fr} }
 
-  /* PRINT / PDF */
   @media print{
-    *{ -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important }
-    body{ background:#08080c !important }
-    header{ padding-top:24px }
-    section{ padding:18px 0; break-inside:avoid }
-    .kpi,.panel,.card,.rec,.ins .col,.callout{ break-inside:avoid }
-    .cards{ grid-template-columns:repeat(3,1fr) }
-    a{ color:var(--cyan) }
+    *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+    nav{display:none} body{background:#08080c !important}
+    section{padding:16px 0;break-inside:avoid}
+    .kpi,.panel,.card,.rec,.ins .col,.callout{break-inside:avoid}
+    .cards{grid-template-columns:repeat(3,1fr)}
   }
-  @page{ size:A4; margin:14mm }
+  @page{size:A4;margin:13mm}
 </style>
 </head>
 <body>
-<div class="wrap">
 
+<nav><div class="inner">
+  <div class="brand" id="navBrand"></div>
+  <div class="links">
+    <a href="#numbers">Numbers</a>
+    <a href="#content">Top content</a>
+    <a href="#analysis">Working</a>
+    <a href="#timing">Best time</a>
+    <a href="#audience">Audience</a>
+    <a href="#next">Next month</a>
+  </div>
+</div></nav>
+
+<div class="wrap">
   <header>
-    <div class="eyebrow"><span class="dot"></span>Instagram Performance Report</div>
-    <h1>Hunt Visuals <span class="hl">monthly</span> social report</h1>
-    <p class="sub">A full read on what the Instagram account did this month, what's pulling its weight, what isn't, and exactly where to point the next 30 days of content.</p>
-    <div class="meta-row">
-      <div class="chip">Account <b>@huntvisuals__</b></div>
-      <div class="chip">Period <b>11 May to 9 Jun 2026</b></div>
-      <div class="chip">Followers <b>4,591</b></div>
-      <div class="chip">Compiled <b>10 Jun 2026</b></div>
+    <div class="prepared">
+      <div class="logo-badge" id="logoBadge"></div>
+      <div class="who"><span>Prepared by</span><b id="agencyName"></b></div>
     </div>
+    <div class="eyebrow"><span class="dot"></span>Instagram Performance Report</div>
+    <h1 id="heroTitle"></h1>
+    <div class="meta-row" id="heroMeta"></div>
   </header>
 
-  <!-- HEADLINE -->
-  <section>
-    <div class="callout">
-      <h3>The one-line read</h3>
-      <p>Reels are carrying the whole account and your education plus behind-the-scenes formats are clearly what works. The hook style (white text, one cyan keyword) is your highest-performing visual pattern. The flip side: organic reach and profile visits both dropped hard this month, more than half your views are paid, and you are leaking nearly three of every four new follows. Fix the churn and lean harder into reels and this climbs fast.</p>
-    </div>
-  </section>
+  <section><div class="callout"><h3>The one-line read</h3><p id="summary"></p></div></section>
 
-  <!-- KPIS -->
   <section id="numbers">
     <div class="sec-head"><span class="num">01</span><h2>The headline numbers</h2></div>
-    <div class="kpis">
-      <div class="kpi">
-        <div class="label">Followers</div>
-        <div class="val">4,591</div>
-        <div class="delta up">▲ +49 net &nbsp;·&nbsp; +1.1%</div>
-        <div class="note">178 new follows, 129 unfollows</div>
-      </div>
-      <div class="kpi">
-        <div class="label">Views</div>
-        <div class="val">135,787</div>
-        <div class="delta flat">55.9% came from ads</div>
-        <div class="note">Organic views ≈ 59,900</div>
-      </div>
-      <div class="kpi">
-        <div class="label">Accounts reached</div>
-        <div class="val">29,437</div>
-        <div class="delta down">▼ −53.2%</div>
-        <div class="note">Biggest drop of the month</div>
-      </div>
-      <div class="kpi">
-        <div class="label">Interactions</div>
-        <div class="val">1,149</div>
-        <div class="delta flat">11.7% from ads</div>
-        <div class="note">Likes 416 · Saves 56 · Shares 48 · Comments 23</div>
-      </div>
-      <div class="kpi">
-        <div class="label">Profile visits</div>
-        <div class="val">2,586</div>
-        <div class="delta down">▼ −40.7%</div>
-        <div class="note">Total profile activity 2,640</div>
-      </div>
-      <div class="kpi">
-        <div class="label">External link taps</div>
-        <div class="val">54</div>
-        <div class="delta up">▲ +20%</div>
-        <div class="note">Only signal trending up on traffic</div>
-      </div>
-    </div>
+    <div class="kpis" id="kpis"></div>
   </section>
 
-  <!-- TOP CONTENT -->
   <section id="content">
     <div class="sec-head"><span class="num">02</span><h2>Top content this month</h2></div>
-    <p class="lead">Ranked by views. Every single one of your top performers is a reel or a talking-head piece using the cyan-keyword hook. That is the pattern to repeat.</p>
-    <div class="cards">
-
-      <div class="card">
-        <div class="rank">1</div><div class="type">Reel</div>
-        <div class="ttl">Why we use <span class="k">A DRONE</span></div>
-        <div class="stats"><div class="s">2,343<span>views</span></div><div class="s">48<span>likes</span></div><div class="s">3<span>follows</span></div></div>
-        <div class="date">29 May · best all-rounder</div>
-      </div>
-
-      <div class="card">
-        <div class="rank">2</div><div class="type">Reel</div>
-        <div class="ttl">VE Plaster shooting day <span class="k">BEHIND THE SCENES</span></div>
-        <div class="stats"><div class="s">2,124<span>views</span></div><div class="s">56<span>likes</span></div></div>
-        <div class="date">1 Jun · most liked of the month</div>
-      </div>
-
-      <div class="card">
-        <div class="rank">3</div><div class="type">Carousel</div>
-        <div class="ttl">We are <span class="k">NOT VIDEOGRAPHERS</span></div>
-        <div class="stats"><div class="s">1,957<span>views</span></div></div>
-        <div class="date">11 May · top non-reel</div>
-      </div>
-
-      <div class="card">
-        <div class="rank">4</div><div class="type">Reel</div>
-        <div class="ttl">Script help: <span class="k">CAMERA POV</span></div>
-        <div class="stats"><div class="s">1,823<span>views</span></div><div class="s">54<span>likes</span></div></div>
-        <div class="date">20 May</div>
-      </div>
-
-      <div class="card">
-        <div class="rank">5</div><div class="type">Reel</div>
-        <div class="ttl">Why you look awkward <span class="k">ON CAMERA</span></div>
-        <div class="stats"><div class="s">1,760<span>views</span></div></div>
-        <div class="date">May</div>
-      </div>
-
-      <div class="card">
-        <div class="rank">6</div><div class="type">Carousel</div>
-        <div class="ttl">Could you <span class="k">4X YOUR PRICES</span></div>
-        <div class="stats"><div class="s">1,483<span>views</span></div></div>
-        <div class="date">May</div>
-      </div>
-
-      <div class="card">
-        <div class="rank">7</div><div class="type">Reel</div>
-        <div class="ttl">Full <span class="k">AD SCRIPT STRUCTURE</span></div>
-        <div class="stats"><div class="s">1,478<span>views</span></div><div class="s">1<span>follow</span></div></div>
-        <div class="date">5 Jun</div>
-      </div>
-
-      <div class="card">
-        <div class="rank">8</div><div class="type">Reel</div>
-        <div class="ttl">What one <span class="k">CONTENT DAY</span> gets you</div>
-        <div class="stats"><div class="s">1,397<span>views</span></div><div class="s">3<span>follows</span></div></div>
-        <div class="date">27 May · top follow driver</div>
-      </div>
-
-      <div class="card">
-        <div class="rank">9</div><div class="type">Reel</div>
-        <div class="ttl">360 <span class="k">HAIR CLINIC</span> shoot</div>
-        <div class="stats"><div class="s">1,250<span>views</span></div></div>
-        <div class="date">May</div>
-      </div>
-
-    </div>
+    <p class="lead">Ranked by views. Tap any card to open the live post. The pattern to repeat is clear: reels and talking-head pieces using the bold-keyword hook.</p>
+    <div class="cards" id="cards"></div>
   </section>
 
-  <!-- WHAT'S WORKING / NOT -->
   <section id="analysis">
     <div class="sec-head"><span class="num">03</span><h2>What's working, what's not</h2></div>
     <div class="ins">
-      <div class="col win">
-        <h3>✅ Working</h3>
-        <ul class="win">
-          <li><b>Reels are the engine.</b> 57.3% of all interactions and the entire top-content list. This is where to put your effort.</li>
-          <li><b>The hook style wins.</b> White text plus one cyan keyword (A DRONE, BEHIND THE SCENES, CAMERA POV). Your four best reels all use it.</li>
-          <li><b>Reaching new people.</b> 66% of views and 18.6% of interactions came from non-followers. Reels are pushing you past your existing base.</li>
-          <li><b>Shares beat comments.</b> 48 shares vs 23 comments. Shares drive reach, so the content is genuinely "send this to a mate" worthy.</li>
-          <li><b>Right people, right place.</b> Reach is concentrated in Brighton, Worthing and Sussex, exactly your ICP geography.</li>
-          <li><b>Link taps up 20%.</b> Small number but the only traffic signal moving the right way.</li>
-        </ul>
-      </div>
-      <div class="col fix">
-        <h3>⚠️ Needs attention</h3>
-        <ul class="fix">
-          <li><b>Reach down 53%, profile visits down 41%.</b> The two biggest month-on-month drops. Likely fewer or weaker-hooked posts in the back half, or last month had a spike to beat.</li>
-          <li><b>Ads are propping up the numbers.</b> 55.9% of views are paid. Organic reach is the soft spot to rebuild.</li>
-          <li><b>High follower churn.</b> 178 follows but 129 unfollows. You are keeping less than 1 in 3 new follows.</li>
-          <li><b>Static posts barely register.</b> Posts are 8.8% of interactions and 9.1% of views. Carousels and photos are not pulling.</li>
-          <li><b>Conversation is thin.</b> 23 comments across all reels. Engagement is passive (watch and like) rather than reply.</li>
-          <li><b>Stories stay in-house.</b> Big share of views but interactions are 81% existing followers, so Stories are not converting new viewers.</li>
-        </ul>
-      </div>
+      <div class="col win"><h3>✅ Working</h3><ul class="win" id="working"></ul></div>
+      <div class="col fix"><h3>⚠️ Needs attention</h3><ul class="fix" id="attention"></ul></div>
     </div>
   </section>
 
-  <!-- CONTENT MIX -->
   <section id="mix">
     <div class="sec-head"><span class="num">04</span><h2>Where the views and engagement come from</h2></div>
-    <div class="grid3">
-
-      <div class="panel">
-        <h3>Views by format</h3>
-        <div class="cap">Share of 135,787 views</div>
-        <div class="donut-wrap">
-          <div class="donut" style="background:conic-gradient(var(--cyan) 0 60.4%, var(--purple) 60.4% 90.9%, #ffffff22 90.9% 100%)">
-            <div class="mid"><b>135.8K</b><span>views</span></div>
-          </div>
-          <div class="legend">
-            <div><span class="sw" style="background:var(--cyan)"></span>Stories<span class="pct">60.4%</span></div>
-            <div><span class="sw" style="background:var(--purple)"></span>Reels<span class="pct">30.5%</span></div>
-            <div><span class="sw" style="background:#ffffff44"></span>Posts<span class="pct">9.1%</span></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="panel">
-        <h3>Interactions by format</h3>
-        <div class="cap">Share of 1,149 interactions</div>
-        <div class="donut-wrap">
-          <div class="donut" style="background:conic-gradient(var(--cyan) 0 57.3%, var(--purple) 57.3% 91.2%, #ffffff22 91.2% 100%)">
-            <div class="mid"><b>1,149</b><span>actions</span></div>
-          </div>
-          <div class="legend">
-            <div><span class="sw" style="background:var(--cyan)"></span>Reels<span class="pct">57.3%</span></div>
-            <div><span class="sw" style="background:var(--purple)"></span>Stories<span class="pct">33.9%</span></div>
-            <div><span class="sw" style="background:#ffffff44"></span>Posts<span class="pct">8.8%</span></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="panel">
-        <h3>Views: paid vs organic</h3>
-        <div class="cap">A lot of reach is bought right now</div>
-        <div class="donut-wrap">
-          <div class="donut" style="background:conic-gradient(var(--amber) 0 55.9%, var(--green) 55.9% 100%)">
-            <div class="mid"><b>55.9%</b><span>from ads</span></div>
-          </div>
-          <div class="legend">
-            <div><span class="sw" style="background:var(--amber)"></span>Paid<span class="pct">55.9%</span></div>
-            <div><span class="sw" style="background:var(--green)"></span>Organic<span class="pct">44.1%</span></div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
+    <div class="grid3" id="donuts3"></div>
     <div class="grid2" style="margin-top:16px">
-      <div class="panel">
-        <h3>Who you reached vs who engaged</h3>
-        <div class="cap">Reels push to new people, engagement stays with your base</div>
-        <div class="bar"><div class="top"><span>Views from non-followers</span><span class="v">66.0%</span></div><div class="track"><div class="fill p" style="width:66%"></div></div></div>
-        <div class="bar"><div class="top"><span>Views from followers</span><span class="v">34.0%</span></div><div class="track"><div class="fill" style="width:34%"></div></div></div>
-        <div class="bar"><div class="top"><span>Interactions from followers</span><span class="v">81.4%</span></div><div class="track"><div class="fill solid" style="width:81.4%"></div></div></div>
-        <div class="bar"><div class="top"><span>Interactions from non-followers</span><span class="v">18.6%</span></div><div class="track"><div class="fill p" style="width:18.6%"></div></div></div>
-      </div>
-
-      <div class="panel">
-        <h3>Reel engagement breakdown</h3>
-        <div class="cap">Where the 543 reel actions landed</div>
-        <div class="bar"><div class="top"><span>Likes</span><span class="v">416</span></div><div class="track"><div class="fill solid" style="width:100%"></div></div></div>
-        <div class="bar"><div class="top"><span>Saves</span><span class="v">56</span></div><div class="track"><div class="fill" style="width:13.5%"></div></div></div>
-        <div class="bar"><div class="top"><span>Shares</span><span class="v">48</span></div><div class="track"><div class="fill" style="width:11.5%"></div></div></div>
-        <div class="bar"><div class="top"><span>Comments</span><span class="v">23</span></div><div class="track"><div class="fill p" style="width:5.5%"></div></div></div>
-      </div>
+      <div class="panel"><h3>Who you reached vs who engaged</h3><div class="cap">Reels push to new people, engagement stays with the base</div><div id="sourceBars"></div></div>
+      <div class="panel"><h3>Reel engagement breakdown</h3><div class="cap">Where the reel actions landed</div><div id="engagementBars"></div></div>
     </div>
   </section>
 
-  <!-- BEST TIME -->
   <section id="timing">
     <div class="sec-head"><span class="num">05</span><h2>Best time to post</h2></div>
-    <p class="lead">From your follower active-times curve. Activity climbs from 6am, holds high through late morning, and peaks 3pm to 6pm before falling away in the evening.</p>
+    <p class="lead">From the follower active-times curve. Activity climbs from the morning and peaks in the late afternoon before falling away in the evening.</p>
     <div class="panel">
-      <h3>When your followers are online</h3>
-      <div class="cap">Relative activity through the day · 6pm is the peak</div>
-      <div class="hours">
-        <div class="col"><div class="b" style="height:22%"></div><small>12a</small></div>
-        <div class="col"><div class="b" style="height:20%"></div><small>3a</small></div>
-        <div class="col"><div class="b" style="height:55%"></div><small>6a</small></div>
-        <div class="col"><div class="b" style="height:70%"></div><small>9a</small></div>
-        <div class="col"><div class="b" style="height:78%"></div><small>12p</small></div>
-        <div class="col"><div class="b" style="height:88%"></div><small>3p</small></div>
-        <div class="col peak"><div class="b" style="height:100%"></div><small>6p</small></div>
-        <div class="col"><div class="b" style="height:62%"></div><small>9p</small></div>
-      </div>
-      <div class="callout" style="margin-top:22px">
-        <h3>The recommendation</h3>
-        <p>Post in the late-morning to early-afternoon window, roughly <b>11am to 1pm</b>. That gives the reel a few hours to gather early views, likes and shares before the 3pm to 6pm activity peak, which is when the algorithm decides whether to push it wider. Avoid posting after 9pm or overnight. Note: this curve is the Monday view, so pull Tuesday to Sunday next month for a full seven-day heatmap.</p>
-      </div>
+      <h3>When your followers are online</h3><div class="cap">Relative activity through the day</div>
+      <div class="hours" id="hours"></div>
+      <div class="callout" style="margin-top:22px"><h3>The recommendation</h3><p id="timeRec"></p></div>
     </div>
   </section>
 
-  <!-- AUDIENCE -->
   <section id="audience">
     <div class="sec-head"><span class="num">06</span><h2>Your audience</h2></div>
     <div class="grid3">
-      <div class="panel">
-        <h3>Age</h3>
-        <div class="cap">Core is 25 to 44</div>
-        <div class="bar"><div class="top"><span>18-24</span><span class="v">12.1%</span></div><div class="track"><div class="fill" style="width:26%"></div></div></div>
-        <div class="bar"><div class="top"><span>25-34</span><span class="v">45.9%</span></div><div class="track"><div class="fill" style="width:100%"></div></div></div>
-        <div class="bar"><div class="top"><span>35-44</span><span class="v">29.0%</span></div><div class="track"><div class="fill" style="width:63%"></div></div></div>
-        <div class="bar"><div class="top"><span>45-54</span><span class="v">10.7%</span></div><div class="track"><div class="fill" style="width:23%"></div></div></div>
-        <div class="bar"><div class="top"><span>55+</span><span class="v">2.1%</span></div><div class="track"><div class="fill" style="width:5%"></div></div></div>
-      </div>
-      <div class="panel">
-        <h3>Gender</h3>
-        <div class="cap">Strongly male audience</div>
-        <div class="donut-wrap">
-          <div class="donut" style="background:conic-gradient(var(--cyan) 0 71.8%, var(--purple) 71.8% 100%)">
-            <div class="mid"><b>71.8%</b><span>men</span></div>
-          </div>
-          <div class="legend">
-            <div><span class="sw" style="background:var(--cyan)"></span>Men<span class="pct">71.8%</span></div>
-            <div><span class="sw" style="background:var(--purple)"></span>Women<span class="pct">28.2%</span></div>
-          </div>
-        </div>
-      </div>
-      <div class="panel">
-        <h3>Top locations</h3>
-        <div class="cap">Followers by town</div>
-        <div class="bar"><div class="top"><span>Brighton &amp; Hove</span><span class="v">11.9%</span></div><div class="track"><div class="fill" style="width:100%"></div></div></div>
-        <div class="bar"><div class="top"><span>Worthing</span><span class="v">9.8%</span></div><div class="track"><div class="fill" style="width:82%"></div></div></div>
-        <div class="bar"><div class="top"><span>London</span><span class="v">5.4%</span></div><div class="track"><div class="fill" style="width:45%"></div></div></div>
-        <div class="bar"><div class="top"><span>Littlehampton</span><span class="v">3.6%</span></div><div class="track"><div class="fill" style="width:30%"></div></div></div>
-        <div class="bar"><div class="top"><span>Chichester</span><span class="v">1.5%</span></div><div class="track"><div class="fill" style="width:13%"></div></div></div>
-      </div>
+      <div class="panel"><h3>Age</h3><div class="cap">Core age band</div><div id="age"></div></div>
+      <div class="panel"><h3>Gender</h3><div class="cap">Audience split</div><div id="genderDonut"></div></div>
+      <div class="panel"><h3>Top locations</h3><div class="cap">Followers by town</div><div id="locations"></div></div>
     </div>
   </section>
 
-  <!-- GROWTH -->
   <section id="growth">
     <div class="sec-head"><span class="num">07</span><h2>Follower growth and churn</h2></div>
-    <div class="grid3">
-      <div class="kpi"><div class="label">New follows</div><div class="val" style="color:var(--green)">178</div><div class="note">Gained over the month</div></div>
-      <div class="kpi"><div class="label">Unfollows</div><div class="val" style="color:var(--red)">129</div><div class="note">72% of your gains lost</div></div>
-      <div class="kpi"><div class="label">Net growth</div><div class="val">+49</div><div class="note">The number that actually stuck</div></div>
-    </div>
-    <div class="callout" style="margin-top:16px">
-      <h3>The churn is the real story here</h3>
-      <p>You earned 178 follows but lost 129, so only 49 stuck. That much churn usually means new followers arrive from a strong reel, then don't see a clear, consistent reason to stay. The fix is a tight content rhythm so people know what they signed up for. More on that below.</p>
-    </div>
+    <div class="grid3" id="growthKpis"></div>
+    <div class="callout" style="margin-top:16px"><h3>The churn is the real story</h3><p id="growthNote"></p></div>
   </section>
 
-  <!-- RECOMMENDATIONS -->
   <section id="next">
     <div class="sec-head"><span class="num">08</span><h2>What to do next 30 days</h2></div>
-    <div class="recs">
-      <div class="rec"><div class="n">1</div><div class="body"><h4>Go reel-heavy with the cyan-keyword hook</h4><p>Aim for 4 to 5 reels a week in your education and behind-the-scenes formats. Keep the white-text plus one-cyan-keyword cover. It is your proven winner. Cut or repurpose static posts into reels.</p></div></div>
-      <div class="rec"><div class="n">2</div><div class="body"><h4>Stop the follower leak</h4><p>Set 3 content pillars so a new follower instantly knows what they will get (e.g. shoot BTS, founder lessons, client results). Pin your three best reels so your profile sells the account in 5 seconds.</p></div></div>
-      <div class="rec"><div class="n">3</div><div class="body"><h4>Turn views into conversation and DMs</h4><p>End every reel with a question or a "comment a word for the script" call to action. Put a ManyChat comment-trigger on your best performers so that reach becomes booked calls, not just likes.</p></div></div>
-      <div class="rec"><div class="n">4</div><div class="body"><h4>Post into the 11am to 1pm window</h4><p>Give each reel runway before the 3 to 6pm activity peak. Build the full seven-day active-times picture next month to sharpen this further.</p></div></div>
-      <div class="rec"><div class="n">5</div><div class="body"><h4>Rebuild organic reach</h4><p>More than half your views are paid right now. Lean into the "send to a mate" angles that already travel (drone, BTS, pricing, on-camera tips) to lift organic shares and reduce the reliance on ad spend.</p></div></div>
-      <div class="rec"><div class="n">6</div><div class="body"><h4>Push the profile and the link harder</h4><p>54 link taps off 29k reach is low. Tighten the bio call to action and use a link sticker on your best Stories so the traffic that does land actually converts.</p></div></div>
-      <div class="rec"><div class="n">7</div><div class="body"><h4>Connect the API so this builds itself</h4><p>Next month we finish the Instagram data connection so this report generates automatically with live embedded posts and week-on-week tracking, no screenshots needed.</p></div></div>
-    </div>
+    <div class="recs" id="recs"></div>
+  </section>
+
+  <section id="targets">
+    <div class="sec-head"><span class="num">09</span><h2>Targets for next month</h2></div>
+    <p class="lead">Measurable goals so each report builds on the last.</p>
+    <div class="panel"><table class="targets"><thead><tr><th>Metric</th><th>Goal</th><th>How</th></tr></thead><tbody id="targets"></tbody></table></div>
   </section>
 
   <footer>
-    <p><b>Hunt Visuals — Instagram Monthly Report.</b> Period 11 May to 9 Jun 2026 · account @huntvisuals__ · 4,591 followers.</p>
-    <p style="margin-top:8px">Built from Instagram Insights data. Top-post cards recreate the live reel covers. Live embedded posts and automated monthly generation are queued for once the Instagram API connection is finished. Figures are last-30-day totals as reported in-app on 10 Jun 2026.</p>
+    <div class="fbrand" id="footBrand"></div>
+    <p id="footLine"></p>
+    <p style="margin-top:8px">Built from Instagram Insights data. Figures are last-30-day totals as reported in-app.</p>
   </footer>
-
 </div>
+
+<script>
+(function(){
+  const R = REPORT;
+  const root = document.documentElement.style;
+  root.setProperty('--accent', R.accent);
+  root.setProperty('--accent2', R.accent2);
+  const palette = [R.accent, R.accent2, '#ffffff44', '#ffffff22'];
+  const set = (id,html)=>{const e=document.getElementById(id); if(e) e.innerHTML=html;};
+  const dirArrow = d => d==='up'?'▲':d==='down'?'▼':'';
+
+  document.title = R.client.name + " — Instagram Monthly Report";
+  set('navBrand', R.client.name + ' <b>·</b> IG Report');
+  set('agencyName', R.agency.name);
+  set('heroTitle', R.client.name + ' <span class="hl">monthly</span> social report');
+  set('summary', R.summary);
+  // logo
+  const lb=document.getElementById('logoBadge');
+  if(R.client.logo){ lb.style.backgroundImage='url('+R.client.logo+')'; lb.textContent=''; }
+  else { lb.textContent = R.client.name.trim().split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
+  // hero meta
+  set('heroMeta', [
+    ['Account', R.client.handle],['Period', R.period],['Followers', R.followers],['Compiled', R.compiled]
+  ].map(([k,v])=>`<div class="chip">${k} <b>${v}</b></div>`).join(''));
+
+  // KPIs
+  set('kpis', R.kpis.map(k=>{
+    const cls = k.dir==='up'?'up':k.dir==='down'?'down':'flat';
+    return `<div class="kpi"><div class="label">${k.label}</div><div class="val">${k.value}</div>
+      <div class="delta ${cls}">${dirArrow(k.dir)} ${k.delta}</div><div class="note">${k.note||''}</div></div>`;
+  }).join(''));
+
+  // Top content cards
+  set('cards', R.topContent.map(c=>{
+    const stats = c.stats.map(s=>`<div class="s">${s[0]}<span>${s[1]}</span></div>`).join('');
+    const inner = `<div class="rank">${c.rank}</div><div class="type">${c.type}</div>
+      <div class="ttl">${c.normal} <span class="k">${c.keyword}</span></div>
+      <div class="stats">${stats}</div><div class="date">${c.date}</div>`;
+    const style = c.img ? ` style="background-image:linear-gradient(180deg,transparent,#000),url('${c.img}')"` : '';
+    return c.link
+      ? `<a class="card" href="${c.link}" target="_blank" rel="noopener"${style}>${inner}</a>`
+      : `<div class="card"${style}>${inner}</div>`;
+  }).join(''));
+
+  // working / attention
+  set('working', R.working.map(t=>`<li>${t}</li>`).join(''));
+  set('attention', R.attention.map(t=>`<li>${t}</li>`).join(''));
+
+  // donut helper
+  function donut(cfg, colors){
+    let acc=0; const stops = cfg.segs.map((s,i)=>{const a=acc; acc+=s[1]; return `${colors[i]} ${a}% ${acc}%`;}).join(', ');
+    const legend = cfg.segs.map((s,i)=>`<div><span class="sw" style="background:${colors[i]}"></span>${s[0]}<span class="pct">${s[1]}%</span></div>`).join('');
+    return `<div class="donut-wrap"><div class="donut" style="background:conic-gradient(${stops})">
+      <div class="mid"><b>${cfg.centerTop}</b><span>${cfg.centerSub}</span></div></div>
+      <div class="legend">${legend}</div></div>`;
+  }
+  set('donuts3',
+    `<div class="panel"><h3>${R.viewsByFormat.title}</h3><div class="cap">Share of total views</div>${donut(R.viewsByFormat,palette)}</div>`+
+    `<div class="panel"><h3>${R.interactionsByFormat.title}</h3><div class="cap">Share of interactions</div>${donut(R.interactionsByFormat,palette)}</div>`+
+    `<div class="panel"><h3>${R.paidVsOrganic.title}</h3><div class="cap">Reach you bought vs earned</div>${donut(R.paidVsOrganic,[R.amber||'#ffc24b','#2ec47a'])}</div>`
+  );
+  document.querySelector('#donuts3').querySelectorAll('.donut')[2].style.background =
+    `conic-gradient(#ffc24b 0 ${R.paidVsOrganic.segs[0][1]}%, #2ec47a ${R.paidVsOrganic.segs[0][1]}% 100%)`;
+
+  // bars helper
+  function bars(list){ const max=Math.max(...list.map(b=>b[1]));
+    return list.map(b=>{const w=(b[1]/max*100).toFixed(1); const cls=b[2]||'';
+      return `<div class="bar"><div class="top"><span>${b[0]}</span><span class="v">${b[1]}${b[3]||''}</span></div>
+        <div class="track"><div class="fill ${cls}" style="width:${w}%"></div></div></div>`;}).join(''); }
+  set('sourceBars', R.sourceBars.map(b=>{const cls=b[2]||'';
+    return `<div class="bar"><div class="top"><span>${b[0]}</span><span class="v">${b[1]}%</span></div>
+      <div class="track"><div class="fill ${cls}" style="width:${b[1]}%"></div></div></div>`;}).join(''));
+  set('engagementBars', bars(R.engagementBars));
+
+  // hours
+  set('hours', R.hours.map(h=>`<div class="col ${h.peak?'peak':''}"><div class="b" style="height:${h.h}%"></div><small>${h.l}</small></div>`).join(''));
+  set('timeRec', R.timeRec);
+
+  // audience
+  set('age', R.age.map(a=>`<div class="bar"><div class="top"><span>${a[0]}</span><span class="v">${a[1]}%</span></div><div class="track"><div class="fill" style="width:${a[1]/Math.max(...R.age.map(x=>x[1]))*100}%"></div></div></div>`).join(''));
+  set('locations', R.locations.map(a=>`<div class="bar"><div class="top"><span>${a[0]}</span><span class="v">${a[1]}%</span></div><div class="track"><div class="fill" style="width:${a[1]/Math.max(...R.locations.map(x=>x[1]))*100}%"></div></div></div>`).join(''));
+  set('genderDonut', donut(R.gender,[R.accent,R.accent2]));
+
+  // growth
+  set('growthKpis',
+    `<div class="kpi"><div class="label">New follows</div><div class="val" style="color:var(--green)">${R.growth.follows}</div><div class="note">Gained this month</div></div>`+
+    `<div class="kpi"><div class="label">Unfollows</div><div class="val" style="color:var(--red)">${R.growth.unfollows}</div><div class="note">Lost this month</div></div>`+
+    `<div class="kpi"><div class="label">Net growth</div><div class="val">${R.growth.net}</div><div class="note">What actually stuck</div></div>`);
+  set('growthNote', R.growth.note);
+
+  // recs
+  set('recs', R.recommendations.map((r,i)=>`<div class="rec"><div class="n">${i+1}</div><div class="body"><h4>${r.h}</h4><p>${r.p}</p></div></div>`).join(''));
+
+  // targets
+  set('targets', R.targets.map(t=>`<tr><td>${t.metric}</td><td><span class="goal">${t.from}<span class="arrow">→</span><span class="to">${t.to}</span></span></td><td class="how">${t.how}</td></tr>`).join(''));
+
+  // footer
+  set('footBrand', R.agency.name + ' <b>·</b> Performance Reporting');
+  set('footLine', `Prepared by ${R.agency.name} for ${R.client.name} · ${R.client.handle} · ${R.followers} followers · ${R.period} · ${R.agency.site}`);
+})();
+</script>
 </body>
 </html>
