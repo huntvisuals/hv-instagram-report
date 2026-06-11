@@ -48,15 +48,15 @@ const REPORT = {
   // img:  optional cover image URL (else a branded gradient shows)
   // link: optional Instagram post URL (makes the card clickable)
   topContent: [
-    { rank:1, type:"Reel",     normal:"Why we use",            keyword:"A DRONE",            date:"29 May · best all-rounder",     stats:[["2,343","views"],["48","likes"],["3","follows"]], img:"", link:"" },
-    { rank:2, type:"Reel",     normal:"VE Plaster shooting day",keyword:"BEHIND THE SCENES", date:"1 Jun · most liked",            stats:[["2,124","views"],["56","likes"]], img:"", link:"" },
+    { rank:1, type:"Reel",     normal:"Why we use",            keyword:"A DRONE",            date:"29 May · best all-rounder",     stats:[["2,343","views"],["48","likes"],["3","follows"]], img:"covers/r1.jpg", link:"https://www.instagram.com/reel/DY6x7-Qge1R/" },
+    { rank:2, type:"Reel",     normal:"VE Plaster shooting day",keyword:"BEHIND THE SCENES", date:"1 Jun · most liked",            stats:[["2,124","views"],["56","likes"]], img:"covers/r2.jpg", link:"https://www.instagram.com/reel/DZDQTbyAdPP/" },
     { rank:3, type:"Carousel", normal:"We are",                keyword:"NOT VIDEOGRAPHERS",  date:"11 May · top non-reel",         stats:[["1,957","views"]], img:"", link:"" },
     { rank:4, type:"Reel",     normal:"Script help:",          keyword:"CAMERA POV",         date:"20 May",                        stats:[["1,823","views"],["54","likes"]], img:"", link:"" },
-    { rank:5, type:"Reel",     normal:"Why you look awkward",  keyword:"ON CAMERA",          date:"May",                           stats:[["1,760","views"]], img:"", link:"" },
+    { rank:5, type:"Reel",     normal:"Why you look awkward",  keyword:"ON CAMERA",          date:"25 May",                           stats:[["1,760","views"]], img:"covers/r5.jpg", link:"https://www.instagram.com/reel/DYxOuk9DYNC/" },
     { rank:6, type:"Carousel", normal:"Could you",             keyword:"4X YOUR PRICES",     date:"May",                           stats:[["1,483","views"]], img:"", link:"" },
-    { rank:7, type:"Reel",     normal:"Full",                  keyword:"AD SCRIPT STRUCTURE",date:"5 Jun",                         stats:[["1,478","views"],["1","follow"]], img:"", link:"" },
-    { rank:8, type:"Reel",     normal:"What one",              keyword:"CONTENT DAY",        date:"27 May · top follow driver",    stats:[["1,397","views"],["3","follows"]], img:"", link:"" },
-    { rank:9, type:"Reel",     normal:"360",                   keyword:"HAIR CLINIC",        date:"May",                           stats:[["1,250","views"]], img:"", link:"" },
+    { rank:7, type:"Reel",     normal:"Full",                  keyword:"AD SCRIPT STRUCTURE",date:"5 Jun",                         stats:[["1,478","views"],["1","follow"]], img:"covers/r7.jpg", link:"https://www.instagram.com/reel/DZM0C2KkSyX/" },
+    { rank:8, type:"Reel",     normal:"What one",              keyword:"CONTENT DAY",        date:"27 May · top follow driver",    stats:[["1,397","views"],["3","follows"]], img:"covers/r8.jpg", link:"https://www.instagram.com/reel/DY2ZEQ7mgLS/" },
+    { rank:9, type:"Reel",     normal:"360",                   keyword:"HAIR CLINIC",        date:"3 Jun",                           stats:[["1,250","views"]], img:"covers/r9.jpg", link:"https://www.instagram.com/reel/DZIfK9CEoZC/" },
   ],
 
   // ---- WHAT'S WORKING / NEEDS ATTENTION ------------------------
@@ -413,10 +413,12 @@ const REPORT = {
   // Top content cards
   set('cards', R.topContent.map(c=>{
     const stats = c.stats.map(s=>`<div class="s">${s[0]}<span>${s[1]}</span></div>`).join('');
+    // When a real cover image is present, drop the text overlay (the cover already has its own title)
+    const titleHtml = c.img ? '' : `<div class="ttl">${c.normal} <span class="k">${c.keyword}</span></div>`;
     const inner = `<div class="rank">${c.rank}</div><div class="type">${c.type}</div>
-      <div class="ttl">${c.normal} <span class="k">${c.keyword}</span></div>
+      ${titleHtml}
       <div class="stats">${stats}</div><div class="date">${c.date}</div>`;
-    const style = c.img ? ` style="background-image:linear-gradient(180deg,transparent,#000),url('${c.img}')"` : '';
+    const style = c.img ? ` style="background-image:linear-gradient(180deg,transparent 55%,#000),url('${c.img}')"` : '';
     return c.link
       ? `<a class="card" href="${c.link}" target="_blank" rel="noopener"${style}>${inner}</a>`
       : `<div class="card"${style}>${inner}</div>`;
