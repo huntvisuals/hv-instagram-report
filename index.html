@@ -249,14 +249,16 @@ const REPORT = {
   .rec .body h4{font-size:15.5px;font-weight:600;margin-bottom:4px}
   .rec .body p{font-size:14px;color:var(--muted)}
 
-  table.targets{width:100%;border-collapse:collapse;font-size:14px}
-  table.targets th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600;padding:0 14px 12px}
-  table.targets td{padding:14px;border-top:1px solid var(--line);vertical-align:middle}
-  table.targets tr td:first-child{font-weight:600}
-  .goal{font-family:'Space Grotesk';font-weight:700}
-  .goal .arrow{color:var(--faint);margin:0 7px}
+  .targets{display:flex;flex-direction:column}
+  .targets .thead,.targets .trow{display:grid;grid-template-columns:1.1fr 1.3fr 2.1fr;gap:18px;align-items:center}
+  .targets .thead{font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600;padding:0 4px 12px}
+  .targets .trow{padding:15px 4px;border-top:1px solid var(--line);font-size:14px}
+  .targets .trow .metric{font-weight:600}
+  .goal{font-family:'Space Grotesk';font-weight:700;white-space:nowrap}
+  .goal .arrow{color:var(--faint);margin:0 8px}
   .goal .to{color:var(--green)}
-  table.targets .how{color:var(--muted);font-size:13px}
+  .targets .how{color:var(--muted);font-size:13px}
+  @media(max-width:640px){ .targets .thead{display:none} .targets .trow{grid-template-columns:1fr;gap:5px;padding:16px 4px} }
 
   .callout{background:linear-gradient(120deg,color-mix(in srgb,var(--accent) 9%,transparent),color-mix(in srgb,var(--accent2) 9%,transparent));border:1px solid color-mix(in srgb,var(--accent) 22%,transparent);border-radius:var(--radius);padding:24px 26px}
   .callout h3{font-size:17px;margin-bottom:8px}
@@ -393,7 +395,7 @@ const REPORT = {
   <section id="targets">
     <div class="sec-head"><span class="num">09</span><h2>Targets for next month</h2></div>
     <p class="lead">Measurable goals so each report builds on the last.</p>
-    <div class="panel"><table class="targets"><thead><tr><th>Metric</th><th>Goal</th><th>How</th></tr></thead><tbody id="targets"></tbody></table></div>
+    <div class="panel"><div class="targets"><div class="thead"><div>Metric</div><div>Goal</div><div>How</div></div><div id="targetsRows"></div></div></div>
   </section>
 
   <footer>
@@ -498,7 +500,7 @@ const REPORT = {
   set('recs', R.recommendations.map((r,i)=>`<div class="rec"><div class="n">${i+1}</div><div class="body"><h4>${r.h}</h4><p>${r.p}</p></div></div>`).join(''));
 
   // targets
-  set('targets', R.targets.map(t=>`<tr><td>${t.metric}</td><td><span class="goal">${t.from}<span class="arrow">→</span><span class="to">${t.to}</span></span></td><td class="how">${t.how}</td></tr>`).join(''));
+  set('targetsRows', R.targets.map(t=>`<div class="trow"><div class="metric">${t.metric}</div><div><span class="goal">${t.from}<span class="arrow">→</span><span class="to">${t.to}</span></span></div><div class="how">${t.how}</div></div>`).join(''));
 
   // footer
   set('footBrand', R.agency.name + ' <b>·</b> Performance Reporting');
