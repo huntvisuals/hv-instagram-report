@@ -279,9 +279,33 @@ const REPORT = {
     .cards{grid-template-columns:repeat(3,1fr)}
   }
   @page{size:A4;margin:13mm}
+
+  /* ---- INTERACTIVITY ---- */
+  #progress{position:fixed;top:0;left:0;height:3px;width:0;z-index:100;background:linear-gradient(90deg,var(--accent),var(--accent2));box-shadow:0 0 12px var(--accent)}
+  nav .links a{position:relative;transition:color .2s}
+  nav .links a.active{color:var(--text)}
+  nav .links a.active::after{content:"";position:absolute;left:0;right:0;bottom:-5px;height:2px;background:var(--accent);border-radius:2px}
+  .fill{transition:width 1.1s cubic-bezier(.2,.75,.2,1)}
+  .panel,.rec,.kpi{transition:border-color .2s ease,box-shadow .2s ease}
+  .panel:hover,.rec:hover,.kpi:hover{border-color:color-mix(in srgb,var(--accent) 35%,var(--line));box-shadow:0 12px 34px #0007}
+  body.js .reveal{opacity:0;transform:translateY(20px);transition:opacity .65s cubic-bezier(.2,.7,.2,1),transform .65s cubic-bezier(.2,.7,.2,1)}
+  body.js .reveal.in{opacity:1;transform:none}
+  body.js .donut{opacity:0;transform:scale(.92);transition:opacity .6s ease,transform .6s cubic-bezier(.2,.7,.2,1)}
+  body.js .donut.in{opacity:1;transform:none}
+  body.js .hours .col .b{transform:scaleY(0);transform-origin:bottom;transition:transform .75s cubic-bezier(.2,.7,.2,1)}
+  body.js .hours.in .col .b{transform:scaleY(1)}
+  @media print{
+    #progress{display:none}
+    body.js .reveal{opacity:1 !important;transform:none !important}
+    body.js .donut{opacity:1 !important;transform:none !important}
+    body.js .hours .col .b{transform:none !important}
+    .fill{transition:none !important}
+  }
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} }
 </style>
 </head>
 <body>
+<div id="progress"></div>
 
 <nav><div class="inner">
   <div class="brand" id="navBrand"></div>
@@ -479,6 +503,60 @@ const REPORT = {
   // footer
   set('footBrand', R.agency.name + ' <b>·</b> Performance Reporting');
   set('footLine', `Prepared by ${R.agency.name} for ${R.client.name} · ${R.client.handle} · ${R.followers} followers · ${R.period} · ${R.agency.site}`);
+})();
+</script>
+
+<!-- ---- INTERACTIVITY: scroll progress, scroll-spy nav, reveal-on-scroll, count-up, animated bars/charts ---- -->
+<script>
+(function(){
+  var html=document.documentElement, prog=document.getElementById('progress');
+  function onScroll(){var sc=html.scrollTop/((html.scrollHeight-html.clientHeight)||1);prog.style.width=(Math.max(0,Math.min(1,sc))*100)+'%';}
+  document.addEventListener('scroll',onScroll,{passive:true});window.addEventListener('resize',onScroll);onScroll();
+
+  var links=[].slice.call(document.querySelectorAll('nav .links a')), map={};
+  links.forEach(function(a){map[a.getAttribute('href').slice(1)]=a;});
+  if('IntersectionObserver' in window){
+    var spy=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){links.forEach(function(l){l.classList.remove('active');});if(map[e.target.id])map[e.target.id].classList.add('active');}});},{rootMargin:'-45% 0px -50% 0px'});
+    document.querySelectorAll('section[id]').forEach(function(s){spy.observe(s);});
+  }
+
+  var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce || !('IntersectionObserver' in window)) return;   // content stays fully visible, no animation
+  document.body.classList.add('js');
+
+  document.querySelectorAll('.fill').forEach(function(f){f.dataset.w=f.style.width||'0';f.style.width='0';});
+  document.querySelectorAll('.kpi,.card,.panel,.rec,.ins>.col,.callout,.sec-head,.lead').forEach(function(el){el.classList.add('reveal');});
+
+  function staggerDelay(el){var sibs=[].slice.call(el.parentElement.children).filter(function(c){return c.classList.contains('reveal');});return Math.min(sibs.indexOf(el),6)*55;}
+  function countUp(el){
+    var t=el.textContent, m=t.match(/-?[\d,]+(\.\d+)?/); if(!m) return;
+    var raw=m[0], hasComma=raw.indexOf(',')>-1, decs=(raw.split('.')[1]||'').length,
+        target=parseFloat(raw.replace(/,/g,'')), pre=t.slice(0,m.index), suf=t.slice(m.index+raw.length), dur=900, st=null;
+    function fmt(v){var n=decs?Number(v.toFixed(decs)):Math.round(v);var s=hasComma?n.toLocaleString('en-US',{minimumFractionDigits:decs,maximumFractionDigits:decs}):(decs?n.toFixed(decs):String(n));return pre+s+suf;}
+    function step(ts){if(!st)st=ts;var p=Math.min((ts-st)/dur,1),e=1-Math.pow(1-p,3);el.textContent=fmt(target*e);if(p<1)requestAnimationFrame(step);else el.textContent=t;}
+    requestAnimationFrame(step);
+  }
+
+  var rev=new IntersectionObserver(function(es){es.forEach(function(e){
+    if(!e.isIntersecting) return;
+    var el=e.target;
+    el.style.transitionDelay=staggerDelay(el)+'ms';
+    el.classList.add('in');
+    el.querySelectorAll('.fill[data-w]').forEach(function(f,k){setTimeout(function(){f.style.width=f.dataset.w;},140+k*45);});
+    el.querySelectorAll('.donut').forEach(function(d){d.classList.add('in');});
+    var h=el.querySelector('.hours'); if(h) h.classList.add('in');
+    el.querySelectorAll('.kpi .val, .donut .mid b').forEach(countUp);
+    rev.unobserve(el);
+  });},{threshold:.16,rootMargin:'0px 0px -7% 0px'});
+  document.querySelectorAll('.reveal').forEach(function(el){rev.observe(el);});
+
+  // PDF / print safety: reveal everything so nothing prints blank
+  function forceAll(){
+    document.querySelectorAll('.reveal').forEach(function(e){e.classList.add('in');});
+    document.querySelectorAll('.fill[data-w]').forEach(function(f){f.style.width=f.dataset.w;});
+    document.querySelectorAll('.donut,.hours').forEach(function(e){e.classList.add('in');});
+  }
+  window.addEventListener('beforeprint',forceAll);
 })();
 </script>
 </body>
